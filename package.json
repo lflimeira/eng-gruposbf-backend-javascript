@@ -1,0 +1,51 @@
+{
+  "name": "eng-gruposbf-backend-javascript",
+  "private": true,
+  "workspaces": [
+    "packages/*",
+    "services/*",
+    "ports/*"
+  ],
+  "scripts": {
+    "build": "yarn workspaces foreach -pt run build",
+    "watch": "yarn workspace @lflimeira/eng-gruposbf-backend-javascript start",
+    "clean": "yarn clean:builds && yarn clean:modules",
+    "clean:builds": "find . -name \"build\" -exec rm -rf '{}' +",
+    "clean:modules": "find . -name \"node_modules\" -exec rm -rf '{}' +",
+    "format": "eslint --fix --ext .ts '**/src/**/*.ts'",
+    "postinstall": "husky install",
+    "lint": "eslint --ext .ts,.js '**/src/**/*.ts'",
+    "test": "jest",
+    "test:ci": "yarn build && yarn test --passWithNoTests",
+    "test:unit": "jest"
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "lint-staged",
+      "commit-msg": "commitlint -E HUSKY_GIT_PARAMS"
+    }
+  },
+  "devDependencies": {
+    "@babel/preset-env": "7.19.1",
+    "@babel/preset-typescript": "7.18.6",
+    "@commitlint/cli": "17.1.2",
+    "@types/jest": "29.0.3",
+    "@types/node": "18.11.0",
+    "@typescript-eslint/eslint-plugin": "5.36.1",
+    "@typescript-eslint/parser": "5.36.1",
+    "aws-sdk": "2.1248.0",
+    "eslint": "8.23.0",
+    "eslint-config-prettier": "8.5.0",
+    "eslint-plugin-import": "2.26.0",
+    "eslint-plugin-jest": "27.0.1",
+    "eslint-plugin-prettier": "4.2.1",
+    "husky": "8.0.1",
+    "jest": "29.0.3",
+    "lint-staged": "13.0.3",
+    "prettier": "2.7.1",
+    "sort-package-json": "2.0.0",
+    "ts-jest": "29.0.1",
+    "ts-node": "10.9.1"
+  },
+  "packageManager": "yarn@3.2.4"
+}

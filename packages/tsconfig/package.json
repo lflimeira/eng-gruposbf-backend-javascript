@@ -1,0 +1,11 @@
+{
+  "name": "@lflimeira/tsconfig",
+  "version": "0.0.1",
+  "license": "MIT",
+  "files": [
+    "main.json"
+  ],
+  "scripts": {
+    "publish-pkg": "npm publish"
+  }
+}
