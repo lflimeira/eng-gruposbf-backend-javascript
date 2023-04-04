@@ -1,0 +1,21 @@
+{
+  "name": "@lflimeira/domains",
+  "private": true,
+  "repository": "https://github.com/lflimeira/eng-gruposbf-backend-javascript",
+  "main": "build/src/index.js",
+  "files": [
+    "build"
+  ],
+  "scripts": {
+    "build": "tsc",
+    "build:watch": "tsc --watch"
+  },
+  "dependencies": {
+    "cuid": "2.1.8",
+    "zod": "3.19.1"
+  },
+  "devDependencies": {
+    "typescript": "4.8.4"
+  },
+  "packageManager": "yarn@3.2.4"
+}
