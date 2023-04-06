@@ -1,0 +1,44 @@
+name: Deploy package to prd
+
+on:
+  workflow_dispatch:
+    inputs:
+      package:
+        description: Package name
+        required: true
+        type: choice
+        options:
+          - logger
+          - apollo
+          - tsconfig
+
+jobs:
+  build-and-deploy:
+    name: Build
+    runs-on: ubuntu-latest
+    permissions: 
+      contents: read
+      packages: write 
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          ref: ${{ github.head_ref }}
+      - uses: actions/setup-node@v3
+        with:
+          node-version: 16.17
+          registry-url: "https://npm.pkg.github.com"
+          scope: "@lflimeira"
+      - name: Set npmAuthToken
+        run: yarn config set npmScopes.z1app.npmAuthToken ${{ secrets.GH_PAT_TOKEN }}
+      - name: Install dependencies
+        run: yarn
+      - name: Build project
+        run: yarn build
+      - name: Pack @lflimeira/${{ inputs.package }} 📦
+        run: yarn workspace @lflimeira/${{ inputs.package }} pack
+      - name: Move @lflimeira/${{ inputs.package }} 🚀
+        run: yarn workspace @lflimeira/${{ inputs.package }} exec mv package.tgz ~/
+      - name: Deploy @lflimeira/${{ inputs.package }} 🚀
+        run: npm publish ~/package.tgz
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
