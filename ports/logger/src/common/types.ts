@@ -2,7 +2,6 @@ export type LogLevel = "debug" | "info" | "warn" | "error";
 
 export type LogParams = {
   message: string;
-  userId?: string;
   stacktrace?: string;
   details?: Record<string, any>;
 };

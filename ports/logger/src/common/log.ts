@@ -12,7 +12,6 @@ export const log = (options?: LogOptions): PrefixedFunction => {
         timestamp: new Date().toISOString(),
         message: `[${options?.prefix ?? "Unknown"}]: ${params.message}`,
         source: getSource(new Error().stack as string),
-        userId: params.userId,
         stacktrace: params.stacktrace,
         details: params.details,
       };
