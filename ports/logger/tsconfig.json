@@ -1,0 +1,15 @@
+{
+  "extends": "@lflimeira/tsconfig/main.json",
+  "include": ["@types", "src/**/*"],
+  "exclude": ["**/__tests__", "build"],
+  "compilerOptions": {
+    "target": "es5",
+    "module": "commonjs",
+    "rootDir": ".",
+    "outDir": "./build/",
+    "baseUrl": "./src/",
+    "composite": true,
+    "declaration": true,
+    "declarationMap": true
+  },
+}

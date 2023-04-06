@@ -1,11 +1,16 @@
 {
   "name": "@lflimeira/tsconfig",
   "version": "0.0.1",
+  "repository": "https://github.com/lflimeira/eng-gruposbf-backend-javascript",
   "license": "MIT",
   "files": [
     "main.json"
   ],
   "scripts": {
     "publish-pkg": "npm publish"
+  },
+  "packageManager": "yarn@3.2.3",
+  "publishConfig": {
+    "registry": "https://npm.pkg.github.com"
   }
 }
