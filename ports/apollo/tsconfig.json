@@ -1,0 +1,13 @@
+{
+  "extends": "@lflimeira/tsconfig/main.json",
+  "include": ["@types", "src/**/*"],
+  "exclude": ["**/__tests__", "build"],
+  "compilerOptions": {
+    "rootDir": ".",
+    "outDir": "./build/",
+    "baseUrl": "./src/",
+    "composite": true,
+    "declaration": true,
+    "declarationMap": true
+  },
+}
