@@ -1,0 +1,26 @@
+{
+  "name": "@lflimeira/apollo",
+  "version": "0.0.1",
+  "repository": "https://github.com/lflimeira/eng-gruposbf-backend-javascript",
+  "main": "build/src/index.js",
+  "files": [
+    "build"
+  ],
+  "scripts": {
+    "build": "tsc",
+    "publish-pkg": "npm publish package.tgz"
+  },
+  "dependencies": {
+    "@lflimeira/logger": "workspace:^",
+    "apollo-server": "3.10.3",
+    "apollo-server-lambda": "3.10.3",
+    "graphql": "16.6.0"
+  },
+  "devDependencies": {
+    "typescript": "4.8.4"
+  },
+  "packageManager": "yarn@3.2.4",
+  "publishConfig": {
+    "registry": "https://npm.pkg.github.com"
+  }
+}
