@@ -11,6 +11,7 @@ on:
           - logger
           - apollo
           - tsconfig
+          - mongodb
 
 jobs:
   build-and-deploy:
