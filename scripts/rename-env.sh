@@ -1,0 +1,1 @@
+find . -depth -name ".env.example" -exec sh -c 'f="{}"; cp -- "$f" "${f%.env.example}.env"' \;

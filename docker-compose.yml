@@ -1,0 +1,107 @@
+version: "3.8"
+
+services:
+  #Tools
+  test:
+    build:
+      context: .
+      dockerfile: ./docker/tools.Dockerfile
+      args:
+        GH_PAT_TOKEN: "${GH_PAT_TOKEN}"
+    command: yarn test:ci
+
+  lint:
+    build:
+      context: .
+      dockerfile: ./docker/tools.Dockerfile
+      args:
+        GH_PAT_TOKEN: "${GH_PAT_TOKEN}"
+    command: yarn lint
+
+  mongo:
+    image: mongo
+    restart: always
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: example
+
+  mongo-express:
+    image: mongo-express
+    restart: always
+    ports:
+      - 8081:8081
+    environment:
+      ME_CONFIG_MONGODB_ADMINUSERNAME: root
+      ME_CONFIG_MONGODB_ADMINPASSWORD: example
+      ME_CONFIG_MONGODB_URL: mongodb://root:example@mongo:27017/
+
+  #Builders
+  domains:
+    build:
+      context: .
+      dockerfile: ./docker/builders.Dockerfile
+      args:
+        GH_PAT_TOKEN: "${GH_PAT_TOKEN}"
+    volumes:
+      - ./packages/domains:/usr/app/packages/domains
+      - /usr/app/node_modules
+    command: yarn workspace @lflimeira/domains build
+
+  domains-dev:
+    build:
+      context: .
+      dockerfile: ./docker/local.Dockerfile
+    volumes:
+      - ./packages/domains:/usr/app/packages/domains
+      - /usr/app/node_modules
+    environment:
+      - NODE_ENV=development
+    command: yarn workspace @lflimeira/domains build --watch
+
+  apollo:
+    build:
+      context: .
+      dockerfile: ./docker/builders.Dockerfile
+    volumes:
+      - ./ports/apollo:/usr/app/ports/apollo
+      - /usr/app/node_modules
+    command: yarn workspace @lflimeira/apollo build --watch
+
+  logger:
+    build:
+      context: .
+      dockerfile: ./docker/builders.Dockerfile
+    volumes:
+      - ./ports/logger:/usr/app/ports/logger
+      - /usr/app/node_modules
+    command: yarn workspace @lflimeira/logger build --watch
+
+  mongodb:
+    build:
+      context: .
+      dockerfile: ./docker/builders.Dockerfile
+    volumes:
+      - ./ports/mongodb:/usr/app/ports/mongodb
+      - /usr/app/node_modules
+    command: yarn workspace @lflimeira/mongodb build --watch
+
+  #Runners
+  currency-exchange:
+    build:
+      context: .
+      dockerfile: ./docker/services.Dockerfile
+      args:
+        SERVICE: currency-exchange
+        GH_PAT_TOKEN: "${GH_PAT_TOKEN}"
+    depends_on:
+      - mongodb
+    env_file:
+      - ./services/currency-exchange/.env
+    command: npx nodemon build/src/index.mjs
+    ports:
+      - "5003:5003"
+    volumes:
+      - ./services/currency-exchange/build:/usr/app/build
+
+volumes:
+  db:
