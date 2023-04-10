@@ -3,7 +3,10 @@ import mongodb from "../client";
 const insertOne = jest.fn();
 const mockConnect = jest.fn();
 const findOne = jest.fn();
-const find = jest.fn();
+const toArray = jest.fn();
+const find = jest.fn().mockImplementation(() => ({
+  toArray: toArray,
+}));
 const mockCollection = jest.fn().mockImplementation(() => ({
   insertOne: insertOne,
   findOne: findOne,
@@ -73,5 +76,29 @@ describe("mongo-db", () => {
     expect(findOne).toBeCalledWith({
       currencyCode: "USD",
     });
+  });
+
+  it("should call find on findAll method", async () => {
+    toArray.mockImplementation(() => [
+      {
+        currencyCode: "USD",
+        country: "Estados Unidos)",
+      },
+    ]);
+
+    const client = await _client;
+
+    const result = await client.findAll({
+      collection: "currencies",
+    });
+
+    expect(mockCollection).toBeCalledWith("currencies");
+    expect(find).toBeCalledWith();
+    expect(result).toEqual([
+      {
+        currencyCode: "USD",
+        country: "Estados Unidos)",
+      },
+    ]);
   });
 });
