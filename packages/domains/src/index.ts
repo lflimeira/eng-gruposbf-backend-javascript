@@ -1,3 +1,6 @@
-import ExampleDomain from "./example-domain";
+import CurrencyExchangeDomain, {
+  Currency,
+  CurrencyExchange,
+} from "./currency-exchange";
 
-export { ExampleDomain };
+export { CurrencyExchangeDomain, Currency, CurrencyExchange };

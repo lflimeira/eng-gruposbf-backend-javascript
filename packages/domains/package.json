@@ -11,6 +11,7 @@
     "build:watch": "tsc --watch"
   },
   "dependencies": {
+    "@lflimeira/mongodb": "workspace:^",
     "cuid": "2.1.8",
     "zod": "3.19.1"
   },

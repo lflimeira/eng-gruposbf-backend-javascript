@@ -2192,6 +2192,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@lflimeira/domains@workspace:packages/domains"
   dependencies:
+    "@lflimeira/mongodb": "workspace:^"
     cuid: 2.1.8
     typescript: 4.8.4
     zod: 3.19.1
@@ -2207,7 +2208,7 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@lflimeira/mongodb@workspace:ports/mongodb":
+"@lflimeira/mongodb@workspace:^, @lflimeira/mongodb@workspace:ports/mongodb":
   version: 0.0.0-use.local
   resolution: "@lflimeira/mongodb@workspace:ports/mongodb"
   dependencies:
