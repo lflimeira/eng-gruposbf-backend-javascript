@@ -1,0 +1,12 @@
+{
+  "extends": "@lflimeira/tsconfig/main.json",
+  "include": ["@types", "src/**/*"],
+  "exclude": ["**/__tests__", "build"],
+  "compilerOptions": {
+    "target": "es2020",
+    "module": "esnext",
+    "rootDir": ".",
+    "outDir": "./build/",
+    "baseUrl": "./src/"
+  }
+}
