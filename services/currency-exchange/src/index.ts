@@ -20,9 +20,6 @@ const config = {
   DATABASE_ENDPOINT: `${DB_HOST}`,
 };
 
-// eslint-disable-next-line no-console
-console.log(config.DATABASE_ENDPOINT);
-
 const context: Context = {
   Domains: {
     CurrencyExchange: await CurrencyExchangeDomain({
