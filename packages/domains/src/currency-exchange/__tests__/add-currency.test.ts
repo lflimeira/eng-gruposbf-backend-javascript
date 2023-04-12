@@ -99,7 +99,10 @@ describe("addCurrency", () => {
 
   it("should return the created currency after call mongodb's insert", async () => {
     const findOne = jest.fn().mockResolvedValue(undefined);
-    const insert = jest.fn().mockResolvedValue(input);
+    const insert = jest.fn().mockResolvedValue({
+      acknowledged: true,
+      insertedId: "6435e0d16bcc1124320afbb9",
+    });
     const { MongoDB } = buildMock({
       mongodb: {
         findOne,
@@ -117,7 +120,13 @@ describe("addCurrency", () => {
 
     expect(info).toBeCalledWith({
       message: "Currency inserted successfully",
-      details: { currency: input },
+      details: {
+        currency: input,
+        insertResult: {
+          acknowledged: true,
+          insertedId: "6435e0d16bcc1124320afbb9",
+        },
+      },
     });
     expect(insert).toHaveBeenCalledWith({
       collection: "currencies",
