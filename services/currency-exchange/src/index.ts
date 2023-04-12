@@ -13,12 +13,7 @@ const Logger = createLogger({
   prefix: "Currency Exchange Service",
 });
 
-const { APP_ENV, DB_HOST, DB_USER, DB_PASSWORD, DB_PORT } = process.env;
-
-const config = {
-  APP_ENV: APP_ENV,
-  DATABASE_ENDPOINT: `${DB_HOST}`,
-};
+const { DB_HOST, DB_USER, DB_PASSWORD, DB_PORT } = process.env;
 
 const context: Context = {
   Domains: {

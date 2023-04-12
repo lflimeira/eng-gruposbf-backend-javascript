@@ -23,11 +23,8 @@ services:
     restart: unless-stopped
     env_file:
       - ./services/currency-exchange/.env
-    environment:
-      - MONGO_INITDB_ROOT_USERNAME=$MONGODB_USER
-      - MONGO_INITDB_ROOT_PASSWORD=$MONGODB_PASSWORD
     ports:
-      - $MONGODB_LOCAL_PORT:$MONGODB_DOCKER_PORT
+      - "7017:27017"
     volumes:
       - db:/data/db
     networks:
@@ -98,11 +95,6 @@ services:
     command: npx nodemon build/src/index.mjs
     ports:
       - "5003:5003"
-    environment:
-      - DB_HOST=$DB_HOST
-      - DB_USER=$MONGODB_USER
-      - DB_PASSWORD=$MONGODB_PASSWORD
-      - DB_PORT=$MONGODB_DOCKER_PORT
     volumes:
       - ./services/currency-exchange/build:/usr/app/build
     networks:
