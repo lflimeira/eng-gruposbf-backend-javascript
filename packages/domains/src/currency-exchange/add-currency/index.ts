@@ -58,6 +58,7 @@ const addCurrency = (MongoDB: MongoDBConnector, Logger: Logger) => {
 
       Logger.info({
         message: "Currency inserted successfully",
+
         details: { currency: input, insertResult },
       });
 
