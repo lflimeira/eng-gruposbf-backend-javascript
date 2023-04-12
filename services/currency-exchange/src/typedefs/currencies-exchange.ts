@@ -1,6 +1,6 @@
 import { graphql } from "@lflimeira/apollo";
 
-const { GraphQLObjectType, GraphQLNonNull, GraphQLString, GraphQLInt } =
+const { GraphQLObjectType, GraphQLNonNull, GraphQLString, GraphQLFloat } =
   graphql;
 
 export const CurrencyExchange = new GraphQLObjectType({
@@ -8,6 +8,6 @@ export const CurrencyExchange = new GraphQLObjectType({
   fields: () => ({
     currencyCode: { type: new GraphQLNonNull(GraphQLString) },
     country: { type: new GraphQLNonNull(GraphQLString) },
-    amount: { type: new GraphQLNonNull(GraphQLInt) },
+    amount: { type: new GraphQLNonNull(GraphQLFloat) },
   }),
 });

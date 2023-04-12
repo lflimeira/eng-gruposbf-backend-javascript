@@ -7,6 +7,8 @@ import { validateInput } from "../utils";
 import _addCurrency from "./add-currency";
 import _listCurrenciesExchange from "./list-currencies-exchange";
 
+import { QuotationPort } from "./ports/quotation-api";
+
 const configSchema = z.object({
   host: z.string(),
   database: z.string(),
@@ -26,9 +28,11 @@ const domain = async ({
     database: Config.database,
   });
 
+  const Quotation = QuotationPort(Logger);
+
   return {
     addCurrency: _addCurrency(MongoDB, Logger),
-    listCurrenciesExchange: _listCurrenciesExchange(MongoDB, Logger),
+    listCurrenciesExchange: _listCurrenciesExchange(MongoDB, Logger, Quotation),
   };
 };
 
