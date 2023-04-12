@@ -18,22 +18,17 @@ services:
         GH_PAT_TOKEN: "${GH_PAT_TOKEN}"
     command: yarn lint
 
-  mongo:
-    image: mongo
-    restart: always
-    environment:
-      MONGO_INITDB_ROOT_USERNAME: root
-      MONGO_INITDB_ROOT_PASSWORD: example
-
-  mongo-express:
-    image: mongo-express
-    restart: always
+  database:
+    image: mongo:5.0.2
+    restart: unless-stopped
+    env_file:
+      - ./services/currency-exchange/.env
     ports:
-      - 8081:8081
-    environment:
-      ME_CONFIG_MONGODB_ADMINUSERNAME: root
-      ME_CONFIG_MONGODB_ADMINPASSWORD: example
-      ME_CONFIG_MONGODB_URL: mongodb://root:example@mongo:27017/
+      - "7017:27017"
+    volumes:
+      - db:/data/db
+    networks:
+      - currency-exchange
 
   #Builders
   domains:
@@ -94,7 +89,7 @@ services:
         SERVICE: currency-exchange
         GH_PAT_TOKEN: "${GH_PAT_TOKEN}"
     depends_on:
-      - mongodb
+      - database
     env_file:
       - ./services/currency-exchange/.env
     command: npx nodemon build/src/index.mjs
@@ -102,6 +97,12 @@ services:
       - "5003:5003"
     volumes:
       - ./services/currency-exchange/build:/usr/app/build
+    networks:
+      - currency-exchange
+
+networks:
+  currency-exchange:
+    name: currency-exchange
 
 volumes:
   db:
