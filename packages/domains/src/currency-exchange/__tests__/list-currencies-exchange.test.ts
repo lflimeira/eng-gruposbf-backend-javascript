@@ -1,15 +1,29 @@
 import { mock as mongodbMock, MongoDBConnector } from "@lflimeira/mongodb";
 
+import {
+  mock as quotationMock,
+  QuotationConnector,
+} from "../ports/quotation-api";
+
 import listCurrenciesExchange from "../list-currencies-exchange";
 
-const buildMock = (mocks?: { mongodb?: Partial<MongoDBConnector> }) => {
+const buildMock = (mocks?: {
+  mongodb?: Partial<MongoDBConnector>;
+  quotation?: Partial<QuotationConnector>;
+}) => {
   return {
     MongoDB: {
       ...mongodbMock(),
       ...mocks?.mongodb,
     },
+    Quotation: {
+      ...quotationMock(),
+      ...mocks?.quotation,
+    },
   };
 };
+
+jest.mock("node-fetch", () => jest.fn());
 
 describe("listCurrenciesExchange", () => {
   beforeEach(jest.clearAllMocks);
@@ -27,12 +41,13 @@ describe("listCurrenciesExchange", () => {
   };
 
   it("should throw an error because input is not valid", async () => {
-    const { MongoDB } = buildMock();
+    const { MongoDB, Quotation } = buildMock();
 
     await expect(
       listCurrenciesExchange(
         MongoDB,
-        Logger
+        Logger,
+        Quotation
       )({
         amount: -50,
       } as any)
@@ -43,14 +58,14 @@ describe("listCurrenciesExchange", () => {
 
   it("should throw an error when mongodb's findAll throws an error", async () => {
     const findAll = jest.fn().mockRejectedValue(new Error());
-    const { MongoDB } = buildMock({
+    const { MongoDB, Quotation } = buildMock({
       mongodb: {
         findAll,
       },
     });
 
     await expect(
-      listCurrenciesExchange(MongoDB, Logger)(input)
+      listCurrenciesExchange(MongoDB, Logger, Quotation)(input)
     ).rejects.toThrowError("List currencies failed:--:LIST_CURRENCIES_FAILED");
   });
 
@@ -62,19 +77,27 @@ describe("listCurrenciesExchange", () => {
       },
     ];
     const findAll = jest.fn().mockResolvedValue(currencies);
-    const { MongoDB } = buildMock({
+    const getQuotation = jest.fn().mockResolvedValue(5.45);
+    const { MongoDB, Quotation } = buildMock({
       mongodb: {
         findAll,
       },
+      quotation: {
+        getQuotation,
+      },
     });
 
-    const result = await listCurrenciesExchange(MongoDB, Logger)(input);
+    const result = await listCurrenciesExchange(
+      MongoDB,
+      Logger,
+      Quotation
+    )(input);
 
     expect(result).toEqual([
       {
         currencyCode: "EUR",
         country: "Países da União Europeia",
-        amount: 0,
+        amount: 917.43,
       },
     ]);
   });

@@ -6,12 +6,17 @@ import { Currency, CurrencyExchange } from "../types/currency";
 import { COLLECTION } from "../constants";
 import { ListCurrenciesFailedError } from "../types/errors";
 import { validateInput } from "../../utils";
+import { QuotationConnector } from "../ports/quotation-api";
 
 const schema = z.object({
   amount: z.number().positive(),
 });
 
-const listCurrenciesExchange = (MongoDB: MongoDBConnector, Logger: Logger) => {
+const listCurrenciesExchange = (
+  MongoDB: MongoDBConnector,
+  Logger: Logger,
+  Quotation: QuotationConnector
+) => {
   return async ({
     ...input
   }: z.infer<typeof schema>): Promise<CurrencyExchange[]> => {
@@ -27,13 +32,18 @@ const listCurrenciesExchange = (MongoDB: MongoDBConnector, Logger: Logger) => {
         collection: COLLECTION,
       });
 
-      return currencies.map((currency) => ({
-        currencyCode: currency.currencyCode,
-        country: currency.country,
-        // when create the port to get the currency exchange,
-        //add the correct amount in this line
-        amount: 0,
-      }));
+      const currenciesExchange = await currencies.map(async (currency) => {
+        const quotationAmount = await Quotation.getQuotation(
+          currency.currencyCode
+        );
+        return {
+          currencyCode: currency.currencyCode,
+          country: currency.country,
+          amount: parseFloat((input.amount / quotationAmount).toFixed(2)),
+        };
+      });
+
+      return await Promise.all(currenciesExchange);
     } catch (err) {
       Logger.error({
         error: err as Error,
