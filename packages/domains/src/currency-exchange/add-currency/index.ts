@@ -51,17 +51,17 @@ const addCurrency = (MongoDB: MongoDBConnector, Logger: Logger) => {
     }
 
     try {
-      const newCurrency = await MongoDB.insert<Currency>({
+      const insertResult = await MongoDB.insert<Currency>({
         collection: COLLECTION,
         item: input,
       });
 
       Logger.info({
         message: "Currency inserted successfully",
-        details: { currency: newCurrency },
+        details: { currency: input, insertResult },
       });
 
-      return newCurrency;
+      return input;
     } catch (err) {
       Logger.error({
         error: err as Error,
