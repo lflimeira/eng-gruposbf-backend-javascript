@@ -47,6 +47,14 @@ Pronto, agora você esta dentro do repositório do projeto. Antes de começar a 
 
     Vale ressaltar que se optar pela segunda opção, toda a instância do terminal/prompt de comando em que for rodar a aplicação, necessitará desse export.
 
+- Precisamos instalar o yarn globalmente. Execute o comando a seguir em seu terminal/prompt de comando:
+
+```sh
+npm install --global yarn
+```
+
+Caso queira, existem outras opções de instalação do yarn nesse [link](https://classic.yarnpkg.com/lang/en/docs/install/#mac-stable).
+
 - Agora precisamos instalar as dependências do projeto. Execute o comando a seguir em seu terminal/prompt de comando:
 
 ```sh
