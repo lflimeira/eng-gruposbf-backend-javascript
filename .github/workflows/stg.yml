@@ -1,0 +1,83 @@
+name: Deploy services main branch to stg
+
+on:
+  push:
+    branches: [main]
+
+env:
+  GH_PAT_TOKEN: ${{ secrets.GH_PAT_TOKEN }}
+
+jobs:
+  test:
+    name: Test
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
+        with:
+          node-version: 16
+          registry-url: "https://npm.pkg.github.com"
+          scope: "@lflimeira"
+      - name: Update .env files
+        run: ./scripts/rename-env.sh
+      - name: Set npmAuthToken
+        run: yarn config set npmScopes.lflimeira.npmAuthToken $GH_PAT_TOKEN
+      - name: Run tests
+        run: docker-compose up --exit-code-from test test
+      - name: Dump Docker logs on failure
+        if: failure()
+        uses: jwalton/gh-docker-logs@v1
+  build:
+    name: Build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Send message to Slack
+        id: slack
+        uses: slackapi/slack-github-action@v1.15.0
+        with:
+          payload: '{"repository":"${{ github.repository }}","workflow":"${{ github.workflow }}","actor":"${{ github.actor }}","branch":"${{ github.ref }}","link":"${{ env.GITHUB_ACTION_URL }}"}'
+        env:
+          GITHUB_ACTION_URL: https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
+        with:
+          node-version: 16
+          registry-url: "https://npm.pkg.github.com"
+          scope: "@lflimeira"
+      - name: Set npmAuthToken
+        run: yarn config set npmScopes.lflimeira.npmAuthToken $GH_PAT_TOKEN
+      - name: Install dependencies
+        run: yarn
+      - name: Build project
+        run: yarn build
+      - name: Persist dist
+        uses: actions/upload-artifact@v3
+        with:
+          name: dist
+          path: services/**/build
+          if-no-files-found: error
+  deploy-currency-exchange-service:
+    name: Deploy currency-exchange
+    needs: [build, test]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Retrieve build
+        uses: actions/download-artifact@v3
+        with:
+          name: dist
+          path: ./
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID_STG }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY_STG }}
+          aws-region: us-east-1
+      - name: Update currency-exchange lambda
+        run: |
+          cd ./currency-exchange/build; \
+          zip -r -qq build.zip src; \
+          aws lambda update-function-code \
+            --function-name currency-exchange-stg \
+            --zip-file fileb://build.zip \
+            --publish
