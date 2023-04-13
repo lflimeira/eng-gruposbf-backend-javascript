@@ -2,9 +2,11 @@
 
 Essa repositório contém o monorepo criado para o teste de engenharia de software do grupo SBF.
 
-Dentro do nosso monorepo temos, por hora, apenas uma aplicação. O serviço de conversão de moedas, que consiste básicamente em um serviço GraphQL que, por hora, tem duas funções, A principal é a que recebe um valor em real e converte esse valor para as moedas préviamente cadastradas, e a outra é a função de cadastrar moedas.
+Dentro do nosso projeto temos, por hora, apenas uma aplicação, o serviço de conversão de moedas, que consiste basicamente em um serviço GraphQL que tem duas funções:
+- Cadastro de moedas.
+- Conversão de valores para moeda préviamente cadastradas. 
 
-Esse monorepo foi criado utilizando utilando Yarn Workspace, que é uma funcionalidade do Yarn que permite agrupar múltiplas aplicações em um único repositório.
+Esse monorepo foi criado utilizando Yarn Workspace, que é uma funcionalidade do Yarn que permite agrupar múltiplas aplicações em um único repositório.
 
 ### Ferramentas necessárias para rodar a aplicação
 
@@ -19,7 +21,7 @@ A aplicação foi criada e testada com as ferramentas com as versões abaixo:
 
 ### Rodando a aplicação localmente
 
-Primeiramente é preciso baixar o repositório em sua máquina. Para isso, rode o comando a seguir no seu terminal/prompt de comando:
+Primeiro é preciso baixar o repositório em sua máquina, para isso, rode o comando a seguir no seu terminal/prompt de comando:
 
 ```sh
 git clone git@github.com:lflimeira/eng-gruposbf-backend-javascript.git
@@ -31,17 +33,19 @@ Depois que o clone do repositório for realizado, acesse a pasta do projeto, com
 cd eng-gruposbf-backend-javascript
 ```
 
-Pronto, agora você esta dentro do repositório do projeto. Antes de começar a rodar a aplicação, precisamos fazer algumas preparações:
+Pronto, agora você esta dentro do repositório do projeto. Antes de começar a rodar a aplicação, precisamos realizar algumas configurações:
 
 - Garanta que o Docker esteja rodando em sua máquina. 
-- Na pasta `services/currency-exchange` existe o arquivo `.env.example`. Renomeie esse arquivo para `.env`.
-- Agora temos duas opções, ou criamos uma cópia do arquivo `.env` na pasta raiz do projeto apenas com a variavels de ambiente `GH_PAT_TOKEN="FAKE_GH_PAT_TOKEN"` ou podemos fazer o export dessa variável na máquina com o comando a seguir em seu terminal/prompt de comando:
+- Na pasta `services/currency-exchange`, renomeie o arquivo `.env.example` para `.env`.
+- Agora temos duas opções: 
+  - Ou criamos uma cópia do arquivo `.env` na pasta raiz do projeto apenas com a variável de ambiente `GH_PAT_TOKEN="FAKE_GH_PAT_TOKEN"`. 
+  - Ou podemos fazer o export dessa variável na máquina com o comando a seguir em seu terminal/prompt de comando:
 
-```sh
-export GH_PAT_TOKEN="FAKE_GH_PAT_TOKEN"
-```
+    ```sh
+    export GH_PAT_TOKEN="FAKE_GH_PAT_TOKEN"
+    ```
 
-Vale ressaltar que se optar pela segunda opção, toda a instância do terminal/prompt de comando em que for rodar a aplicação, necessitará desse export.
+    Vale ressaltar que se optar pela segunda opção, toda a instância do terminal/prompt de comando em que for rodar a aplicação, necessitará desse export.
 
 - Agora precisamos instalar as dependências do projeto. Execute o comando a seguir em seu terminal/prompt de comando:
 
@@ -126,7 +130,7 @@ Com esse comando executando, também é possível acompanhar os logs da aplicaç
 
 Com a a aplicação rodando, nós precisamos chamar a query e mutation para realizar as ações esperadas por elas. Para isso, podemos utilizar a ferramenta que mais nos agrada para fazer as requisições. Eu particularmente utilizo o Insomnia, mas vou deixar duas opções o cURL para rodar em seu terminal/prompt de comando e as requests para serem inseridas no Insomnia.
 
-#### Adicionar uma nova moeda na aplicação.
+#### Cadastro de nova moeda na aplicação.
 
 ```sh
 curl --request POST \
@@ -257,7 +261,7 @@ No nosso caso por exemplo temos apenas um serviço que é servido como uma inter
 
 ### Possíveis melhorias
 
-Existem algumas coisas que não incluí no projeto, mas que acredito que vale a penas serem citados/mapeados como possíveis melhorias de implementação para uma aplicação para produção.
+Existem algumas coisas que não incluí no projeto, mas que acredito que vale a pena serem citados/mapeados como possíveis melhorias de implementação para uma aplicação para produção.
 
 - Criar um diretório na raiz do projeto chamada `infrastructure`, nesse diretório estaria centralizado a infraestrutura de todos os serviços codificada utilizando terraform.
 - Melhorar e simplificar os passos para rodar a aplicação localmente, uma proposta seria ter um docker-compose para o CI, e outro para rodar a aplicação localmente, isso simplificaria os passos para subir a aplicação, uma terceira opção seria ter um docker-compose para produção caso tenhamos serviços que rodem em um Fargate por exemplo.
