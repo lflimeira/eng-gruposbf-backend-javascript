@@ -24,7 +24,7 @@ services:
     env_file:
       - ./services/currency-exchange/.env
     ports:
-      - "7017:27017"
+      - "27017:27017"
     volumes:
       - db:/data/db
     networks:
